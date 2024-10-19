@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento Barbearia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-image: url('https://img.elo7.com.br/product/685x685/454E142/quadro-decorativo-a4-simpsons-mdf-barbearia-decorativo.jpg');
+            background-size: cover; /* Faz a imagem cobrir toda a tela */
+            background-position: center; /* Centraliza a imagem */
+            background-repeat: no-repeat; /* Evita que a imagem se repita */
+        }
+
+        h1 {
+            text-align: center;
+            color: white; /* Torna o texto visível sobre a imagem */
+            text-shadow: 2px 2px 4px #000; /* Adiciona uma sombra ao texto para destacar */
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.8); /* Fundo branco semi-transparente para destacar o formulário */
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Agendamento de Barbearia</h1>
+    <div class="container">
+        <form id="agendamentoForm">
+            <label for="nome">Nome Completo</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="telefone">Telefone</label>
+            <input type="tel" id="telefone" name="telefone" required pattern="[0-9]{11}" placeholder="11987654321">
+
+            <label for="servico">Selecione o Serviço</label>
+            <select id="servico" name="servico" required>
+                <option value="">Selecione um serviço</option>
+                <option value="corte">Corte de Cabelo</option>
+                <option value="barba">Barba</option>
+                <option value="combo">Corte + Barba</option>
+            </select>
+
+            <label for="data">Data</label>
+            <input type="date" id="data" name="data" required min="">
+
+            <label for="hora">Hora</label>
+            <select id="hora" name="hora" required>
+                <option value="">Escolha um horário</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+            </select>
+
+            <button type="submit">Agendar</button>
+        </form>
+
+        <div class="message" id="successMessage">
+            Agendamento realizado com sucesso!<br>
+            Detalhes: <span id="details"></span>
+        </div>
+    </div>
+
+    <script>
+        // Bloqueia datas anteriores à atual
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById("data").setAttribute("min", today);
+
+        document.getElementById("agendamentoForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evita o envio do formulário
+
+            // Coleta os dados do formulário
+            const nome = document.getElementById("nome").value;
+            const telefone = document.getElementById("telefone").value;
+            const servico = document.getElementById("servico").value;
+            const data = document.getElementById("data").value;
+            const hora = document.getElementById("hora").value;
+
+            // Exibe os detalhes do agendamento
+            const detalhes = `Nome: ${nome}, Telefone: ${telefone}, Serviço: ${servico}, Data: ${data}, Hora: ${hora}`;
+            document.getElementById("details").textContent = detalhes;
+
+            // Exibe a mensagem de sucesso
+            document.getElementById("successMessage").style.display = "block";
+
+            // Monta a mensagem para o WhatsApp
+            const mensagem = `Olá, meu nome é ${nome}. Gostaria de agendar um ${servico} para o dia ${data} às ${hora}.`;
+
+            // Redireciona para o WhatsApp
+            const numeroBarbeiro = '61992517218';
+            const whatsappURL = `https://wa.me/${numeroBarbeiro}?text=${encodeURIComponent(mensagem)}`;
+            window.location.href = whatsappURL;
+
+            // Limpa o formulário
+            document.getElementById("agendamentoForm").reset();
+        });
+    </script>
+</body>
+</html>
